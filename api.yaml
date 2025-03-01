@@ -1,0 +1,229 @@
+openapi: 3.0.3
+info:
+  title: Bank Service API
+  version: 1.0.0
+  x-codegen:
+    packageName: com.homework.bank
+paths:
+  /accounts:
+    post:
+      summary: Add an account
+      description: Add an account
+      operationId: addAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddAccountRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Invalid input
+  /accounts/{accountId}:
+    get:
+      summary: Get account by id
+      description: Get account by id
+      operationId: getAccountById
+      parameters:
+        - name: accountId
+          in: path
+          description: Account id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Invalid input
+        '404':
+          description: Account not found
+  /transactions:
+    post:
+      summary: Create a pending transaction
+      description: Create a pending transaction
+      operationId: createTransaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Invalid input
+  /transactions/{transactionId}:
+    get:
+      summary: Get transaction by id
+      description: Get transaction by id
+      operationId: getTransactionById
+      parameters:
+        - name: transactionId
+          in: path
+          description: Transaction id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Invalid input
+        '404':
+          description: Transaction not found
+  /transactions/{transactionId}/submit:
+    post:
+      summary: Submit an transaction with id for execution
+      description: Submit an transaction with id for execution
+      operationId: submitTransaction
+      parameters:
+        - name: transactionId
+          in: path
+          description: Transaction id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Invalid input
+        '403':
+          description: Transaction status not allowed for execution
+        '404':
+          description: Transaction not found
+components:
+  schemas:
+    AddAccountRequest:
+      type: object
+      required:
+        - accountId
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          example: 10
+        balance:
+          type: string
+          example: 100.12
+    Account:
+      type: object
+      required:
+        - id
+        - balance
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        balance:
+          type: string
+          example: 100.12
+    TransactionType:
+      type: integer
+      description: Transaction type
+      enum: [ 0, 1, 2 ]
+      x-enum-varnames:
+        - TRANSFER
+        - DEPOSIT
+        - WITHDRAWAL
+    TransactionStatus:
+      type: integer
+      description: Transaction status
+      enum: [ 0, 1, 2 ]
+      x-enum-varnames:
+        - PENDING
+        - SUCCEEDED
+        - FAILED
+    CreateTransactionRequest:
+      type: object
+      required:
+        - type
+        - fromAccountId
+        - toAccountId
+        - amount
+      properties:
+        fromAccountId:
+          type: integer
+          format: int64
+          example: 123
+        toAccountId:
+          type: integer
+          format: int64
+          example: 123
+        amount:
+          type: string
+          example: 100.5
+        type:
+          $ref: '#/components/schemas/TransactionType'
+    Transaction:
+      type: object
+      required:
+        - id
+        - type
+        - fromAccountId
+        - toAccountId
+        - amount
+        - status
+        - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 101
+        type:
+          type: integer
+          format: int32
+          example: 1
+        fromAccountId:
+          type: integer
+          format: int64
+          example: 123
+        toAccountId:
+          type: integer
+          format: int64
+          example: 123
+        amount:
+          type: string
+          example: 100.5
+        status:
+          type: integer
+          format: int32
+          example: 1
+        createdAt:
+          type: integer
+          description: Timestamp when transaction is created
+          format: int64
+          example: 17000000000
+        completedAt:
+          type: integer
+          description: Timestamp when transaction succeeds or fails
+          format: int64
+          example: 17000000000
