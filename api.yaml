@@ -119,6 +119,23 @@ paths:
           description: Transaction status not allowed for execution
         '404':
           description: Transaction not found
+
+  /ping:
+    get:
+      summary: Check service health
+      description: Check service health
+      operationId: ping
+      responses:
+        '200':
+          description: successful operation
+  /deep-ping:
+    get:
+      summary: Check service health deeply
+      description: Check service health deeply, e.g. database, cache
+      operationId: deepPing
+      responses:
+        '200':
+          description: successful operation
 components:
   schemas:
     AddAccountRequest:

@@ -7,7 +7,7 @@ openapi-generator-cli generate -i api.yaml -g java -o generated-java \
 --api-package=com.bank.api.client  \
 --group-id=com.bank \
 --artifact-id=bank-service-api \
---additional-properties=usePrimitives=true
+--additional-properties=usePrimitives=true || exit
 
 cd generated-java || exit
 
