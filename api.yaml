@@ -5,7 +5,7 @@ info:
   x-codegen:
     packageName: com.homework.bank
 paths:
-  /accounts:
+  /api/v1/accounts:
     post:
       summary: Add an account
       description: Add an account
@@ -25,7 +25,7 @@ paths:
                 $ref: '#/components/schemas/Account'
         '400':
           description: Invalid input
-  /accounts/{accountId}:
+  /api/v1/accounts/{accountId}:
     get:
       summary: Get account by id
       description: Get account by id
@@ -49,7 +49,7 @@ paths:
           description: Invalid input
         '404':
           description: Account not found
-  /transactions:
+  /api/v1/transactions:
     post:
       summary: Create a pending transaction
       description: Create a pending transaction
@@ -69,7 +69,7 @@ paths:
                 $ref: '#/components/schemas/Transaction'
         '400':
           description: Invalid input
-  /transactions/{transactionId}:
+  /api/v1/transactions/{transactionId}:
     get:
       summary: Get transaction by id
       description: Get transaction by id
@@ -93,7 +93,7 @@ paths:
           description: Invalid input
         '404':
           description: Transaction not found
-  /transactions/{transactionId}/submit:
+  /api/v1/transactions/{transactionId}/submit:
     post:
       summary: Submit an transaction with id for execution
       description: Submit an transaction with id for execution
@@ -119,7 +119,36 @@ paths:
           description: Transaction status not allowed for execution
         '404':
           description: Transaction not found
-
+  /api/v1/auth:
+    post:
+      summary: Authentication
+      description: Authentication
+      operationId: auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /api/v1/auth-info:
+    get:
+      summary: Authentication
+      description: Authentication
+      operationId: getAuthInfo
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthInfo'
   /ping:
     get:
       summary: Check service health
@@ -244,3 +273,27 @@ components:
           description: Timestamp when transaction succeeds or fails
           format: int64
           example: 17000000000
+    AuthRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    AuthResponse:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+    AuthInfo:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          type: string
